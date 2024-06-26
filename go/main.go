@@ -36,7 +36,7 @@ func main() {
     }
 
     http.HandleFunc("/", handleRequest)
-//    log.Printf("Server is running on port %s", port)
+   log.Printf("Server is running on port %s", port)
     log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
@@ -53,27 +53,27 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
     conn, err := upgrader.Upgrade(w, r, nil)
     if err != nil {
-//        log.Println("WebSocket upgrade error:", err)
+       log.Println("WebSocket upgrade error:", err)
         return
     }
     defer conn.Close()
 
-//    log.Println("New WebSocket connection established")
+   log.Println("New WebSocket connection established")
 
     for {
         messageType, message, err := conn.ReadMessage()
         if err != nil {
-//            log.Println("Read error:", err)
+           log.Println("Read error:", err)
             return
         }
 
         if messageType != websocket.BinaryMessage {
-//            log.Println("Received non-binary message")
+           log.Println("Received non-binary message")
             continue
         }
 
         if err := handleProxyRequest(conn, message); err != nil {
-//            log.Println("Proxy error:", err)
+           log.Println("Proxy error:", err)
             return
         }
     }
@@ -130,7 +130,7 @@ func handleProxyRequest(wsConn *websocket.Conn, message []byte) error {
         return fmt.Errorf("unknown address type")
     }
 
-//    log.Printf("Connection details: host=%s, port=%d, atyp=%d", host, targetPort, atyp)
+   log.Printf("Connection details: host=%s, port=%d, atyp=%d", host, targetPort, atyp)
 
     if err := wsConn.WriteMessage(websocket.BinaryMessage, []byte{version, 0}); err != nil {
         return fmt.Errorf("failed to send response: %w", err)
